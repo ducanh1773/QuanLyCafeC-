@@ -5,7 +5,6 @@ C:\Users\Admin\Desktop\C#QuanLyCafe\QuanLyCafe\obj\Debug\net8.0\QuanLyCafe.Assem
 C:\Users\Admin\Desktop\C#QuanLyCafe\QuanLyCafe\obj\Debug\net8.0\QuanLyCafe.csproj.CoreCompileInputs.cache
 C:\Users\Admin\Desktop\C#QuanLyCafe\QuanLyCafe\obj\Debug\net8.0\QuanLyCafe.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Admin\Desktop\C#QuanLyCafe\QuanLyCafe\obj\Debug\net8.0\QuanLyCafe.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\Admin\Desktop\C#QuanLyCafe\QuanLyCafe\obj\Debug\net8.0\QuanLyCafe.sourcelink.json
 C:\Users\Admin\Desktop\C#QuanLyCafe\QuanLyCafe\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\Admin\Desktop\C#QuanLyCafe\QuanLyCafe\bin\Debug\net8.0\appsettings.json
 C:\Users\Admin\Desktop\C#QuanLyCafe\QuanLyCafe\bin\Debug\net8.0\QuanLyCafe.exe

@@ -4,6 +4,7 @@ using QuanLyCafe.Models;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Cors;
+
 namespace QuanLyCafe.Controllers
 {
     [ApiController]
@@ -81,7 +82,7 @@ namespace QuanLyCafe.Controllers
             existingAccount.Deleted = updatedAccount.Deleted;
 
             _context.SaveChanges();
-            return Ok(existingAccount);
+            return Ok(id);
         }
 
         [HttpDelete("{id}")]
@@ -96,7 +97,7 @@ namespace QuanLyCafe.Controllers
             _context.Accounts.Remove(account);
             _context.SaveChanges();
 
-            return Ok($"Account with ID {id} has been deleted.");
+            return Ok(id);
         }
 
 

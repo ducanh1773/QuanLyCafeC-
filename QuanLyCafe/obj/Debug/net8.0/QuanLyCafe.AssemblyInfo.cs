@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QuanLyCafe")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a9a0fb91536620cb4c9c74f913fb4b7ea70536b1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0cad8ce8c76cb48bfa0238fe7ea303937246790e")]
 [assembly: System.Reflection.AssemblyProductAttribute("QuanLyCafe")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QuanLyCafe")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
