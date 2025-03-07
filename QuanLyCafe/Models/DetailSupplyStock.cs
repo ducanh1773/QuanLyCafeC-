@@ -17,6 +17,8 @@ namespace QuanLyCafe.Models
         [Required]
         public int Quantity { get; set; }
 
+      
+        
 
     }
 

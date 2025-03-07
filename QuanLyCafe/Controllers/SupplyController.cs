@@ -39,7 +39,7 @@ namespace QuanLyCafe.Controllers
 
         public ActionResult<Supply> AddSupply(SupplyRequestDto input)
         {
-        
+
             if (input == null || input.Stocks == null || !input.Stocks.Any())
             {
                 return BadRequest("Cannot create supply and related records");
@@ -52,12 +52,12 @@ namespace QuanLyCafe.Controllers
                 Status = true,
                 Deleted = false,
             };
-            
-            
+
+
 
             _context.Supplies.Add(supply);
             _context.SaveChanges();
-            
+
             Console.WriteLine(supply);
 
             foreach (var stockRequest in input.Stocks)
@@ -92,7 +92,7 @@ namespace QuanLyCafe.Controllers
                     Deleted = false,
                     Sum_Price = stockRequest.Price,
                 };
-                
+
                 Console.WriteLine(paymentForms);
 
                 _context.paymentForms.Add(paymentForms);
@@ -103,7 +103,44 @@ namespace QuanLyCafe.Controllers
             return CreatedAtAction(nameof(GetById), new { id = supply.id }, supply);
         }
 
+    //     [HttpDelete("{id}")]
+    //     public ActionResult<Supply> DeleteSupply(int id)
+    //     {
+    //         // Find the supply to delete, including related DetailSupplyStocks
+    //         var supplyToDelete = _context.Supplies
+    //             .Include(s => s.DetailSupplyStocks)
+    //             .ThenInclude(d => d.Id_Stock) // Include the related Stock
+    //             .FirstOrDefault(x => x.id == id);
 
-    }
+    //         if (supplyToDelete == null)
+    //         {
+    //             return NotFound("Cannot find supply");
+    //         }
+
+    //         // Process each detail supply stock
+    //         foreach (var detail in supplyToDelete.DetailSupplyStocks)
+    //         {
+    //             var stock = _context.Stocks.FirstOrDefault(x => x.Id == detail.Id_Stock);
+
+    //             if (stock == null)
+    //             {
+    //                 return NotFound($"Cannot find item with ID: {detail.Id_Stock}");
+    //             }
+
+    //             // Update stock quantity
+    //             stock.Quantity += detail.Quantity;
+
+    //             // Optionally, you might want to remove the detail supply stock entry
+    //             _context.detailSupplyStocks.Remove(detail);
+    //         }
+
+    //         // Remove the supply
+    //         _context.Supplies.Remove(supplyToDelete);
+    //         _context.SaveChanges();
+
+    //         return Ok(supplyToDelete); // Return the deleted supply
+    //     }
+
+     }
 
 }
