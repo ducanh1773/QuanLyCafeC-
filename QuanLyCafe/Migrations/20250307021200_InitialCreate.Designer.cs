@@ -12,8 +12,8 @@ using QuanLyCafe.Models;
 namespace QuanLyCafe.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250306081225_UpdateDetailSupplyStock")]
-    partial class UpdateDetailSupplyStock
+    [Migration("20250307021200_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,6 +67,32 @@ namespace QuanLyCafe.Migrations
                     b.ToTable("Account", (string)null);
                 });
 
+            modelBuilder.Entity("QuanLyCafe.Models.DeatailStockProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Id_Product")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_StockProduct")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Ingredient")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DeatailStockProduct", (string)null);
+                });
+
             modelBuilder.Entity("QuanLyCafe.Models.DetailSupplyStock", b =>
                 {
                     b.Property<int>("Id")
@@ -94,6 +120,99 @@ namespace QuanLyCafe.Migrations
                     b.ToTable("DetailSupplyStock", (string)null);
                 });
 
+            modelBuilder.Entity("QuanLyCafe.Models.DetailTableOrder", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("Id_Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_Table")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("DetailTableOrder", (string)null);
+                });
+
+            modelBuilder.Entity("QuanLyCafe.Models.Fund", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FundName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("SumPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("creat_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("detail_status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Fund", (string)null);
+                });
+
+            modelBuilder.Entity("QuanLyCafe.Models.OrderCoffe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Id_Account")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("TimeOrder")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderCoffe", (string)null);
+                });
+
+            modelBuilder.Entity("QuanLyCafe.Models.OrderDetailProduct", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("Id_Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_Product")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("OrderDeatilProduct", (string)null);
+                });
+
             modelBuilder.Entity("QuanLyCafe.Models.PaymentForm", b =>
                 {
                     b.Property<int>("Id")
@@ -108,13 +227,13 @@ namespace QuanLyCafe.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
+                    b.Property<int>("ID_Supply")
+                        .HasColumnType("int");
+
                     b.Property<int>("Id_Fund")
                         .HasColumnType("int");
 
                     b.Property<int>("Id_Order")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id_Supply")
                         .HasColumnType("int");
 
                     b.Property<string>("Payment_Method")
@@ -228,7 +347,7 @@ namespace QuanLyCafe.Migrations
                     b.ToTable("Supply", (string)null);
                 });
 
-            modelBuilder.Entity("QuanLyCafe.Models.Table", b =>
+            modelBuilder.Entity("QuanLyCafe.Models.TableCoffe", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

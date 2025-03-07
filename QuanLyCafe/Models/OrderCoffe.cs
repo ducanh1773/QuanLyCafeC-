@@ -4,25 +4,21 @@ using System.Runtime.CompilerServices;
 namespace QuanLyCafe.Models
 {
 
-    public class Table
+    public class OrderCoffe
     {
         [Key]
         public int Id { get; set; }
         
         [Required]
+        public int Id_Account{ get; set; }
+
         
-        public string TableName { get; set; }
+        public DateTime TimeOrder{get; set; }
         
-        [Required]
-        
-        public int ChairNumber{ get; set; }
-        
-        [Required]
         public bool Status { get; set; }
-        [Required]
+        
         public bool Deleted { get; set; }
+        
     }
-
-
 
 }

@@ -20,14 +20,14 @@ namespace QuanLyCafe.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Table>> GetTable()
+        public ActionResult<List<TableCoffe>> GetTable()
         {
             var table = _context.Tables.ToList();
             return table;
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Table> GetTableById(int id)
+        public ActionResult<TableCoffe> GetTableById(int id)
         {
             var table = _context.Tables.FirstOrDefault(a => a.Id == id);
             if (table == null)
@@ -38,7 +38,7 @@ namespace QuanLyCafe.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Table> AddTable(Table table)
+        public ActionResult<TableCoffe> AddTable(TableCoffe table)
         {
             if (table == null)
             {
@@ -64,7 +64,7 @@ namespace QuanLyCafe.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<Table> UpdateTable(int id, Table updatedTable)
+        public ActionResult<TableCoffe> UpdateTable(int id, TableCoffe updatedTable)
         {
             // Kiểm tra xem bảng có tồn tại không
             var table = _context.Tables.FirstOrDefault(a => a.Id == id);
