@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 namespace QuanLyCafe.Models
 {
     public class ProductCoffee
@@ -23,7 +24,12 @@ namespace QuanLyCafe.Models
         
         public bool Deleted { get; set; }
         
-        public string ImageProduct{get ; set; }
+        public string ImageProduct{get ; set; }                 
+        
+        // [JsonIgnore]
+        // public ICollection<DeatailStockProduct> deatailStockProducts{ get; set; }   
+        // [JsonIgnore]
+        // public ICollection<OrderDetailProduct> OrderDetailProducts{ get; set; }
         
         
     }

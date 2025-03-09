@@ -21,6 +21,9 @@ namespace QuanLyCafe.Models
         
         public string FundName{ get; set; }
         
+        public ICollection<PaymentForm> paymentForms{ get; set; }
+        
+        
         
     }
     

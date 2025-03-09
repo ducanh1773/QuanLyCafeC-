@@ -33,5 +33,9 @@ namespace QuanLyCafe.Models
         
         [Required]
         public bool Deleted { get; set; }
+        
+        
+        public virtual ICollection<Supply> Supplies { get; set; }
+        
     }
 }

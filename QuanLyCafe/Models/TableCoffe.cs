@@ -21,6 +21,11 @@ namespace QuanLyCafe.Models
         public bool Status { get; set; }
         [Required]
         public bool Deleted { get; set; }
+        
+        
+        public ICollection<TableCoffe> tableCoffes{ get; set; }
+        
+        
     }
 
 

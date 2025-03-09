@@ -47,6 +47,8 @@ namespace QuanLyCafe.Controllers
                 return BadRequest("Product cannot be null");
             }
             productCoffee.CreatedAt = DateTime.Now;
+            // productCoffee.OrderDetailProducts = null;
+            // productCoffee.deatailStockProducts = null;
             _context.ProductCoffee.Add(productCoffee);
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetById), new { id = productCoffee.Id }, productCoffee);

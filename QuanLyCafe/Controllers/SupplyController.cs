@@ -103,43 +103,46 @@ namespace QuanLyCafe.Controllers
             return CreatedAtAction(nameof(GetById), new { id = supply.id }, supply);
         }
 
-    //     [HttpDelete("{id}")]
-    //     public ActionResult<Supply> DeleteSupply(int id)
-    //     {
-    //         // Find the supply to delete, including related DetailSupplyStocks
-    //         var supplyToDelete = _context.Supplies
-    //             .Include(s => s.DetailSupplyStocks)
-    //             .ThenInclude(d => d.Id_Stock) // Include the related Stock
-    //             .FirstOrDefault(x => x.id == id);
+        [HttpDelete("{id}")]
+        public ActionResult<Supply> DeleteSupply(int id)
+        {
+            // Find the supply to delete, including related DetailSupplyStocks
+            var supplyToDelete = _context.Supplies
+                .Include(s => s.DetailSupplyStocks)
+                .ThenInclude(d => d.Stock) // Include the related Stock
+                .FirstOrDefault(x => x.id == id);
 
-    //         if (supplyToDelete == null)
-    //         {
-    //             return NotFound("Cannot find supply");
-    //         }
+            if (supplyToDelete == null)
+            {
+                return NotFound("Cannot find supply");
+            }
 
-    //         // Process each detail supply stock
-    //         foreach (var detail in supplyToDelete.DetailSupplyStocks)
-    //         {
-    //             var stock = _context.Stocks.FirstOrDefault(x => x.Id == detail.Id_Stock);
+            // Process each detail supply stock
+            foreach (var detail in supplyToDelete.DetailSupplyStocks)
+            {
+                var stock = _context.Stocks.FirstOrDefault(x => x.Id == detail.Id_Stock);
 
-    //             if (stock == null)
-    //             {
-    //                 return NotFound($"Cannot find item with ID: {detail.Id_Stock}");
-    //             }
+                if (stock == null)
+                {
+                    return NotFound($"Cannot find item with ID: {detail.Id_Stock}");
+                }
 
-    //             // Update stock quantity
-    //             stock.Quantity += detail.Quantity;
+                // Update stock quantity
+                stock.Quantity -= detail.Quantity;
 
-    //             // Optionally, you might want to remove the detail supply stock entry
-    //             _context.detailSupplyStocks.Remove(detail);
-    //         }
+                // Optionally, you might want to remove the detail supply stock entry
+                _context.detailSupplyStocks.Remove(detail);
+            }
 
-    //         // Remove the supply
-    //         _context.Supplies.Remove(supplyToDelete);
-    //         _context.SaveChanges();
+            // Remove the supply
+            _context.Supplies.Remove(supplyToDelete);
+            _context.SaveChanges();
 
-    //         return Ok(supplyToDelete); // Return the deleted supply
-    //     }
+            return Ok(supplyToDelete); // Return the deleted supply
+        }
+        
+        
+        
 
      }
 

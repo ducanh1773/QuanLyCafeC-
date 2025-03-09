@@ -87,7 +87,7 @@ namespace QuanLyCafe.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DeatailStockProduct", (string)null);
+                    b.ToTable("DetailStockProduct", (string)null);
                 });
 
             modelBuilder.Entity("QuanLyCafe.Models.DetailSupplyStock", b =>
@@ -374,7 +374,7 @@ namespace QuanLyCafe.Migrations
                 {
                     b.HasOne("QuanLyCafe.Models.Supply", null)
                         .WithMany("DetailSupplyStocks")
-                        .HasForeignKey("Supplyid");
+                        .HasForeignKey("ID_Supply");
                 });
 
             modelBuilder.Entity("QuanLyCafe.Models.Supply", b =>

@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 namespace QuanLyCafe.Models
 {
@@ -9,7 +10,7 @@ namespace QuanLyCafe.Models
         [Key]
         public int Id { get; set; }
         
-        [Required]
+        [ForeignKey("Account")]
         public int Id_Account{ get; set; }
 
         
@@ -18,6 +19,14 @@ namespace QuanLyCafe.Models
         public bool Status { get; set; }
         
         public bool Deleted { get; set; }
+        
+        public virtual Account Account { get; set; }
+        
+        public ICollection<OrderDetailProduct> orderDetailProducts { get; set; }
+        
+        public ICollection<DetailTableOrder> detailTableOrders { get; set; }    
+        
+        public ICollection<PaymentForm> paymentForms{ get; set; }
         
     }
 

@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 namespace QuanLyCafe.Models
 {
@@ -8,13 +9,22 @@ namespace QuanLyCafe.Models
         [Key]
         public int Id { get; set; }
         
+        
+        [ForeignKey("ProductCoffee")]
         public int Id_Product{ get; set; }
         
-        public int Id_StockProduct{ get; set; } 
+        
+        [ForeignKey("Stock")]
+        public int Id_Stock{ get; set; } 
         
         public string Ingredient{ get; set; }
         
         public int Quantity { get; set; }
+        
+        public virtual Stock Stock { get; set; }
+        
+        public virtual ProductCoffee ProductCoffee{ get; set; } 
+        
         
         
     }
