@@ -26,10 +26,10 @@ namespace QuanLyCafe.Models
         
         public string ImageProduct{get ; set; }                 
         
-        // [JsonIgnore]
-        // public ICollection<DeatailStockProduct> deatailStockProducts{ get; set; }   
-        // [JsonIgnore]
-        // public ICollection<OrderDetailProduct> OrderDetailProducts{ get; set; }
+        [JsonIgnore]
+        public ICollection<DeatailStockProduct> deatailStockProducts{ get; set; }   
+        [JsonIgnore]
+        public ICollection<OrderDetailProduct> OrderDetailProducts{ get; set; }
         
         
     }

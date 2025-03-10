@@ -23,7 +23,7 @@ namespace QuanLyCafe.Models
         public bool Deleted { get; set; }
         
         
-        public ICollection<TableCoffe> tableCoffes{ get; set; }
+       
         
         
     }

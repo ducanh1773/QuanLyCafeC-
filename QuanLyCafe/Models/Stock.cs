@@ -22,7 +22,6 @@ namespace QuanLyCafe.Models
         [Required]
         public string UnitOfMeasure { get; set; }
 
-        // Navigation property
         public virtual ICollection<DetailSupplyStock> DetailSupplyStocks { get; set; }
         
         public virtual ICollection<DeatailStockProduct> DeatailStockProducts{ get; set; }

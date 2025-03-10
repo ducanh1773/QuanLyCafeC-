@@ -9,7 +9,7 @@ namespace QuanLyCafe.Controllers
 {
     [ApiController]
     [Route("api/account")]
-    [EnableCors("AllowAngularClient")] 
+    [EnableCors("AllowAngularClient")]
     public class AccountController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -49,41 +49,68 @@ namespace QuanLyCafe.Controllers
 
         [HttpPost]
 
-        public ActionResult<Account> AddAccount(Account account)
+        public ActionResult<Account> AddAccount([FromBody] CreateAccountDTO dto)
         {
-            if (account == null)
+            if (dto == null)
             {
-                return BadRequest("Account cannot be null");
+                return BadRequest("Dữ liệu không hợp lệ");
             }
 
-            account.Create_At = DateTime.UtcNow;
-            _context.Accounts.Add(account);
+            dto.Creat_At = DateTime.UtcNow;
+            if (string.IsNullOrEmpty(dto.UserName) || string.IsNullOrEmpty(dto.Email) || string.IsNullOrEmpty(dto.Password))
+            {
+                return BadRequest("Vui lòng điền đầy đủ thông tin.");
+            }
+
+            var newAccount = new Account
+            {
+                UserName = dto.UserName,
+                Email = dto.Email,
+                Password = dto.Password,
+                PhoneNumber = dto.PhoneNumber,
+                Address = dto.Address,
+                Status = dto.Status,
+                Deleted = dto.Deleted,
+                Create_At = DateTime.UtcNow,
+
+            };
+
+            _context.Accounts.Add(newAccount);
+
             _context.SaveChanges();
 
 
-            return CreatedAtAction(nameof(GetById), new { id = account.ID }, account);
+
+            return CreatedAtAction(nameof(GetById), new { id = newAccount.ID }, newAccount);
         }
 
         [HttpPut("{id}")]
-        public ActionResult<Account> UpdateAccount(int id, [FromBody] Account updatedAccount)
+        public ActionResult UpdateAccount(int id, [FromBody] UpdateAccountDTO dto)
         {
             var existingAccount = _context.Accounts.FirstOrDefault(a => a.ID == id);
             if (existingAccount == null)
             {
-                return NotFound($"Account with ID {id} not found.");
+                return NotFound($"Không tìm thấy tài khoản có ID {id}.");
             }
 
-            existingAccount.UserName = updatedAccount.UserName;
-            existingAccount.Email = updatedAccount.Email;
-            existingAccount.PhoneNumber = updatedAccount.PhoneNumber;
-            existingAccount.Address = updatedAccount.Address;
-            existingAccount.Password = updatedAccount.Password;
-            existingAccount.Status = updatedAccount.Status;
-            existingAccount.Deleted = updatedAccount.Deleted;
+            // Cập nhật chỉ các thông tin liên quan đến tài khoản
+            existingAccount.UserName = dto.UserName;
+            existingAccount.Email = dto.Email;
+            existingAccount.PhoneNumber = dto.PhoneNumber;
+            existingAccount.Address = dto.Address;
+
+            if (!string.IsNullOrEmpty(dto.Password))
+            {
+                existingAccount.Password = dto.Password; // Mã hóa mật khẩu
+            }
+
+            existingAccount.Status = dto.Status;
+            existingAccount.Deleted = dto.Deleted;
 
             _context.SaveChanges();
-            return Ok(id);
+            return Ok($"Tài khoản {id} đã được cập nhật thành công.");
         }
+
 
         [HttpDelete("{id}")]
         public ActionResult DeleteAccount(int id)
@@ -91,13 +118,14 @@ namespace QuanLyCafe.Controllers
             var account = _context.Accounts.FirstOrDefault(a => a.ID == id);
             if (account == null)
             {
-                return NotFound($"Account with ID {id} not found.");
+                return NotFound($"Không tìm thấy tài khoản có ID {id}.");
             }
 
-            _context.Accounts.Remove(account);
+            // Không xóa vĩnh viễn, chỉ đánh dấu Deleted = true
+            account.Deleted = true;
             _context.SaveChanges();
 
-            return Ok(id);
+            return Ok($"Tài khoản {id} đã bị vô hiệu hóa (soft delete).");
         }
 
 
