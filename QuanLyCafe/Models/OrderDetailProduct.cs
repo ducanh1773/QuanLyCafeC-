@@ -13,7 +13,7 @@ namespace QuanLyCafe.Models
         [ForeignKey("ProductCoffee")]
         public int Id_Product{get;set;}
         
-        [ForeignKey("Order")]
+        [ForeignKey("OrderCoffe")]
         public int Id_Order{get;set;}
         
         public int Quantity { get; set; }
@@ -22,6 +22,6 @@ namespace QuanLyCafe.Models
         
         public virtual OrderCoffe OrderCoffe{ get; set; }
         
-        
+        public decimal Price { get; set; }
     }
 }

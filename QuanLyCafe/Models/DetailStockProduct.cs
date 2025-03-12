@@ -15,9 +15,7 @@ namespace QuanLyCafe.Models
         
         
         [ForeignKey("Stock")]
-        public int Id_Stock{ get; set; } 
-        
-        public string Ingredient{ get; set; }
+        public int Id_StockProduct{ get; set; } 
         
         public int Quantity { get; set; }
         
