@@ -35,29 +35,36 @@ namespace QuanLyCafe.Controllers
             return Ok(id);
         }
 
-        [HttpPost]
 
+
+        // Thêm supply và upoate fund và stock
+
+        [HttpPost]
         public ActionResult<Supply> AddSupply(SupplyRequestDto input)
         {
-
             if (input == null || input.Stocks == null || !input.Stocks.Any())
             {
                 return BadRequest("Cannot create supply and related records");
             }
 
+            // Tìm tài khoản theo username
+            var account = _context.Accounts.FirstOrDefault(a => a.UserName == input.UserName);
+
+            if (account == null)
+            {
+                return NotFound($"Không tìm thấy tài khoản với username: {input.UserName}");
+            }
+
             var supply = new Supply
             {
-                Id_Account = input.Id_Account,
+                Id_Account = account.ID, // Lấy Id từ tài khoản tìm được
                 Time_In = DateTime.UtcNow,
                 Status = true,
                 Deleted = false,
             };
 
-
-
             _context.Supplies.Add(supply);
             _context.SaveChanges();
-
             Console.WriteLine(supply);
 
             foreach (var stockRequest in input.Stocks)
@@ -66,7 +73,7 @@ namespace QuanLyCafe.Controllers
 
                 if (stock == null)
                 {
-                    return NotFound($"Không tìm mặt hàng: {stockRequest.NameStock}");
+                    return NotFound($"Không tìm thấy mặt hàng: {stockRequest.NameStock}");
                 }
 
                 stock.Quantity += stockRequest.Quantity;
@@ -81,6 +88,12 @@ namespace QuanLyCafe.Controllers
                 _context.detailSupplyStocks.Add(detailSupplyStocks);
                 Console.WriteLine(detailSupplyStocks);
 
+                var fund = _context.funds.FirstOrDefault(f => f.FundName == stockRequest.PaymentMethod);
+                if (fund != null)
+                {
+                    fund.SumPrice -= stockRequest.Price;
+                }
+
                 var paymentForms = new PaymentForm
                 {
                     Id_Order = 0,
@@ -94,7 +107,6 @@ namespace QuanLyCafe.Controllers
                 };
 
                 Console.WriteLine(paymentForms);
-
                 _context.paymentForms.Add(paymentForms);
             }
 
@@ -103,47 +115,99 @@ namespace QuanLyCafe.Controllers
             return CreatedAtAction(nameof(GetById), new { id = supply.id }, supply);
         }
 
-        // [HttpDelete("{id}")]
-        // public ActionResult<Supply> DeleteSupply(int id)
-        // {
-        //     // Find the supply to delete, including related DetailSupplyStocks
-        //     var supplyToDelete = _context.Supplies
-        //         .Include(s => s.DetailSupplyStocks)
-        //         .ThenInclude(d => d.Stock) // Include the related Stock
-        //         .FirstOrDefault(x => x.id == id);
+        [HttpPut("{id}")]
+        public ActionResult<Supply> UpdateSupply(int id, SupplyRequestDto input)
+        {
+            var supply = _context.Supplies.FirstOrDefault(s => s.id == id);
+            if (supply == null)
+            {
+                return NotFound($"Không tìm thấy Supply với ID: {id}");
+            }
 
-        //     if (supplyToDelete == null)
-        //     {
-        //         return NotFound("Cannot find supply");
-        //     }
+            var account = _context.Accounts.FirstOrDefault(a => a.UserName == input.UserName);
+            if (account == null)
+            {
+                return NotFound($"Không tìm thấy tài khoản với username: {input.UserName}");
+            }
 
-        //     // Process each detail supply stock
-        //     foreach (var detail in supplyToDelete.DetailSupplyStocks)
-        //     {
-        //         var stock = _context.Stocks.FirstOrDefault(x => x.Id == detail.Id_Stock);
+            supply.Id_Account = account.ID;
+            supply.Time_In = DateTime.UtcNow;
+            _context.SaveChanges();
 
-        //         if (stock == null)
-        //         {
-        //             return NotFound($"Cannot find item with ID: {detail.Id_Stock}");
-        //         }
+            foreach (var stockRequest in input.Stocks)
+            {
+                var stock = _context.Stocks.FirstOrDefault(s => s.Name == stockRequest.NameStock);
+                if (stock == null)
+                {
+                    return NotFound($"Không tìm thấy mặt hàng: {stockRequest.NameStock}");
+                }
 
-        //         // Update stock quantity
-        //         stock.Quantity -= detail.Quantity;
+                var detailSupplyStock = _context.detailSupplyStocks
+                    .FirstOrDefault(ds => ds.ID_Supply == supply.id && ds.Id_Stock == stock.Id);
 
-        //         // Optionally, you might want to remove the detail supply stock entry
-        //         _context.detailSupplyStocks.Remove(detail);
-        //     }
+                if (detailSupplyStock != null)
+                {
+                    stock.Quantity -= detailSupplyStock.Quantity; // Trừ số lượng cũ
+                    detailSupplyStock.Quantity = stockRequest.Quantity;
+                }
+                else
+                {
+                    detailSupplyStock = new DetailSupplyStock
+                    {
+                        ID_Supply = supply.id,
+                        Id_Stock = stock.Id,
+                        Quantity = stockRequest.Quantity,
+                    };
+                    _context.detailSupplyStocks.Add(detailSupplyStock);
+                }
 
-        //     // Remove the supply
-        //     _context.Supplies.Remove(supplyToDelete);
-        //     _context.SaveChanges();
+                stock.Quantity += stockRequest.Quantity; // Cập nhật số lượng mới
 
-        //     return Ok(supplyToDelete); // Return the deleted supply
-        // }
-        
-        
-        
+                var paymentForm = _context.paymentForms.FirstOrDefault(pf => pf.ID_Supply == supply.id);
+                if (paymentForm != null)
+                {
+                    paymentForm.Sum_Price = stockRequest.Price;
+                    paymentForm.Payment_Method = stockRequest.PaymentMethod;
+                }
+            }
+    
+            _context.SaveChanges();
+            return Ok(id);
+        }
 
-     }
+        [HttpDelete("{id}")]
+        public ActionResult DeleteSupply(int id)
+        {
+            var supply = _context.Supplies.FirstOrDefault(s => s.id == id);
+            if (supply == null)
+            {
+                return NotFound($"Không tìm thấy Supply với ID: {id}");
+            }
+
+            var detailSupplyStocks = _context.detailSupplyStocks.Where(ds => ds.ID_Supply == id).ToList();
+            foreach (var detail in detailSupplyStocks)
+            {
+                var stock = _context.Stocks.FirstOrDefault(s => s.Id == detail.Id_Stock);
+                if (stock != null)
+                {
+                    stock.Quantity -= detail.Quantity;
+                }
+                _context.detailSupplyStocks.Remove(detail);
+            }
+
+            var paymentForms = _context.paymentForms.Where(pf => pf.ID_Supply == id).ToList();
+            _context.paymentForms.RemoveRange(paymentForms);
+
+            _context.Supplies.Remove(supply);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+
+
+
+
+
+    }
 
 }

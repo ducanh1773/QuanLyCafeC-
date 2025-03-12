@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 namespace QuanLyCafe.Models
 {
     public class Account
@@ -35,6 +36,7 @@ namespace QuanLyCafe.Models
         public bool Deleted { get; set; }
         
         
+        [JsonIgnore]
         public virtual ICollection<Supply> Supplies { get; set; }
         
     }

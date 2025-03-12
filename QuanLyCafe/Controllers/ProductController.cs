@@ -40,18 +40,29 @@ namespace QuanLyCafe.Controllers
         }
 
         [HttpPost]
-        public ActionResult<ProductCoffee> AddProduct(ProductCoffee productCoffee)
+        public ActionResult<ProductCoffee> AddProduct([FromBody] ProductCreateDto productCreateDto)
         {
-            if (productCoffee == null)
+            if (productCreateDto == null)
             {
                 return BadRequest("Product cannot be null");
             }
-            productCoffee.CreatedAt = DateTime.Now;
+            productCreateDto.CreatAt = DateTime.Now;
             // productCoffee.OrderDetailProducts = null;
             // productCoffee.deatailStockProducts = null;
-            _context.ProductCoffee.Add(productCoffee);
+            var newProduct = new ProductCoffee
+            {
+                Id = productCreateDto.Id,
+                Name = productCreateDto.Name,
+                Detail = productCreateDto.Detail,
+                price = productCreateDto.Price,
+                Category_Name = productCreateDto.Category_Name,
+                Status = true,
+                Deleted = false,
+                ImageProduct = productCreateDto.ImageProduct,
+            };
+            _context.ProductCoffee.Add(newProduct);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(GetById), new { id = productCoffee.Id }, productCoffee);
+            return CreatedAtAction(nameof(GetById), new { id = productCreateDto.Id }, productCreateDto);
 
         }
 
@@ -70,7 +81,7 @@ namespace QuanLyCafe.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult UpdateProduct(int id, [FromBody] ProductCoffee updateProductCoffee)
+        public ActionResult UpdateProduct(int id, [FromBody] UpdateProductDto updateProductCoffee)
         {
             var productCoffee = _context.ProductCoffee.FirstOrDefault(a => a.Id == id);
             if (productCoffee == null)
@@ -80,7 +91,7 @@ namespace QuanLyCafe.Controllers
 
             productCoffee.Name = updateProductCoffee.Name;
             productCoffee.Detail = updateProductCoffee.Detail;
-            productCoffee.price = updateProductCoffee.price;
+            productCoffee.price = updateProductCoffee.Price;
             productCoffee.Category_Name = updateProductCoffee.Category_Name;
             productCoffee.CreatedAt = DateTime.Now;
             productCoffee.Status = updateProductCoffee.Status;
@@ -91,6 +102,21 @@ namespace QuanLyCafe.Controllers
 
 
         }
+
+
+        // [HttpDelete("{id}")]
+        // public ActionResult DeletedById(int id)
+        // {
+        //     var productDelete = _context.ProductCoffee.FirstOrDefault(x => x.Id == id);
+        //     if (productDelete == null)
+        //     {
+        //         return BadRequest("Sản phẩm không tồn tại");
+        //     }
+        //     productDelete.Deleted = true;
+        //     _context.SaveChanges();
+        //     return Ok(id);
+        // }
+
 
 
     }

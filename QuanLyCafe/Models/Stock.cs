@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace QuanLyCafe.Models
 {
@@ -21,6 +22,8 @@ namespace QuanLyCafe.Models
 
         [Required]
         public string UnitOfMeasure { get; set; }
+        
+        [JsonIgnore]
 
         public virtual ICollection<DetailSupplyStock> DetailSupplyStocks { get; set; }
         

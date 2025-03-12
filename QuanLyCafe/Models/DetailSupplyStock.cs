@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace QuanLyCafe.Models
 {
@@ -19,6 +20,7 @@ namespace QuanLyCafe.Models
         public int Quantity { get; set; }
 
         // Navigation properties
+        [JsonIgnore]
         public virtual Supply Supply { get; set; }
         public virtual Stock Stock { get; set; }
     }

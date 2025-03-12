@@ -2,7 +2,7 @@
 
 public class SupplyRequestDto
 {
-    public int Id_Account { get; set; }
+    public string UserName { get; set; }
     public List<StockRequestDto> Stocks { get; set; } // Danh sách sản phẩm
 }
 

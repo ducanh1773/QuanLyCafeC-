@@ -79,7 +79,7 @@ namespace QuanLyCafe.Controllers
             stock.UnitOfMeasure = updateDto.UnitOfMeasure;
 
             _context.SaveChanges();
-            return Ok($"Stock {id} đã được cập nhật.");
+            return Ok(id);
         }
 
         // Xóa (Soft Delete) stock
@@ -95,7 +95,7 @@ namespace QuanLyCafe.Controllers
             stock.Deleted = true; // Chỉ đánh dấu là đã bị xóa
             _context.SaveChanges();
 
-            return Ok($"Stock {id} đã bị vô hiệu hóa (soft delete).");
+            return Ok(id);
         }
     }
 }

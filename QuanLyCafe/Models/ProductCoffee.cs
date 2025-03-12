@@ -8,29 +8,29 @@ namespace QuanLyCafe.Models
     {
         [Key]
         public int Id { get; set; }
-        
+
         [Required]
         public string Name { get; set; }
-        
-        public string Detail{ get; set; }
-        
-        public decimal price{get; set; }
-        
+
+        public string Detail { get; set; }
+
+        public decimal price { get; set; }
+
         public string Category_Name { get; set; }
-        
-        public DateTime CreatedAt{ get; set; }
-        
+
+        public DateTime CreatedAt { get; set; }
+
         public bool Status { get; set; }
-        
+
         public bool Deleted { get; set; }
-        
-        public string ImageProduct{get ; set; }                 
-        
+
+        public string ImageProduct { get; set; }
+
         [JsonIgnore]
-        public ICollection<DeatailStockProduct> deatailStockProducts{ get; set; }   
+        public ICollection<DeatailStockProduct> deatailStockProducts { get; set; }
         [JsonIgnore]
-        public ICollection<OrderDetailProduct> OrderDetailProducts{ get; set; }
-        
-        
+        public ICollection<OrderDetailProduct> OrderDetailProducts { get; set; }
+
+
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 namespace QuanLyCafe.Models
 {
 
@@ -20,7 +21,12 @@ namespace QuanLyCafe.Models
         public bool Deleted { get; set; }
         public ICollection<DetailSupplyStock> DetailSupplyStocks { get; set; }
         
+        
+        [JsonIgnore]
         public virtual Account Account { get; set; }
+        
+        
+        [JsonIgnore]
         
         public ICollection<PaymentForm> paymentForms{ get; set; }   
         
