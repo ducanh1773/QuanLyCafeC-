@@ -167,3 +167,4 @@ C:\Users\Admin\Desktop\C#QuanLyCafe\QuanLyCafe\obj\Debug\net8.0\refint\QuanLyCaf
 C:\Users\Admin\Desktop\C#QuanLyCafe\QuanLyCafe\obj\Debug\net8.0\QuanLyCafe.pdb
 C:\Users\Admin\Desktop\C#QuanLyCafe\QuanLyCafe\obj\Debug\net8.0\QuanLyCafe.genruntimeconfig.cache
 C:\Users\Admin\Desktop\C#QuanLyCafe\QuanLyCafe\obj\Debug\net8.0\ref\QuanLyCafe.dll
+C:\Users\Admin\Desktop\C#QuanLyCafe\QuanLyCafe\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

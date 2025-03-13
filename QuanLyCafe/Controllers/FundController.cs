@@ -3,12 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using QuanLyCafe.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 namespace QuanLyCafe.Controllers
 {
     [Route("api/fund")]
     [ApiController]
+    [Authorize]
     public class FundController : ControllerBase
     {
+
         private readonly AppDbContext _context;
 
         public FundController(AppDbContext context)
@@ -69,7 +72,7 @@ namespace QuanLyCafe.Controllers
         public async Task<ActionResult> DeleteFundById(int id)
         {
             var deleteFund = _context.funds.FirstOrDefault(x => x.Id == id);
-            if(deleteFund == null)
+            if (deleteFund == null)
             {
                 return NotFound("");
             }
@@ -77,8 +80,8 @@ namespace QuanLyCafe.Controllers
             _context.SaveChanges();
             return Ok(id);
         }
-        
-         [HttpPut("{id}")]
+
+        [HttpPut("{id}")]
         public ActionResult UpdateProduct(int id, [FromBody] FundUpdateDTO fundUpdateDTO)
         {
             var fund = _context.funds.FirstOrDefault(a => a.Id == id);
@@ -95,7 +98,7 @@ namespace QuanLyCafe.Controllers
 
         }
 
-        
+
 
 
 

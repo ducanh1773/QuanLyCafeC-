@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 namespace QuanLyCafe.Controllers
 {
     [ApiController]
     [Route("api/product")]
     [EnableCors("AllowAngularClient")]
-
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -20,6 +21,7 @@ namespace QuanLyCafe.Controllers
         }
 
         [HttpGet]
+
         public ActionResult<List<ProductCoffee>> Get()
         {
             var productCoffees = _context.ProductCoffee.ToList();
@@ -29,6 +31,7 @@ namespace QuanLyCafe.Controllers
 
 
         [HttpGet("{id}")]
+
         public ActionResult<ProductCoffee> GetById(int id)
         {
             var productCoffee = _context.ProductCoffee.FirstOrDefault(a => a.Id == id);
@@ -40,6 +43,7 @@ namespace QuanLyCafe.Controllers
         }
 
         [HttpPost]
+
         public ActionResult<ProductCoffee> AddProduct([FromBody] ProductCreateDto productCreateDto)
         {
             if (productCreateDto == null)
@@ -55,7 +59,7 @@ namespace QuanLyCafe.Controllers
                 Name = productCreateDto.Name,
                 Detail = productCreateDto.Detail,
                 price = productCreateDto.Price,
-                Category_Name = productCreateDto.Category_Name,
+                category_Name = productCreateDto.Category_Name,
                 Status = true,
                 Deleted = false,
                 ImageProduct = productCreateDto.ImageProduct,
@@ -68,6 +72,7 @@ namespace QuanLyCafe.Controllers
 
 
         [HttpDelete("{id}")]
+
         public ActionResult DeteleProduct(int id)
         {
             var productCoffee = _context.ProductCoffee.FirstOrDefault(a => a.Id == id);
@@ -92,7 +97,7 @@ namespace QuanLyCafe.Controllers
             productCoffee.Name = updateProductCoffee.Name;
             productCoffee.Detail = updateProductCoffee.Detail;
             productCoffee.price = updateProductCoffee.Price;
-            productCoffee.Category_Name = updateProductCoffee.Category_Name;
+            productCoffee.category_Name = updateProductCoffee.Category_Name;
             productCoffee.CreatedAt = DateTime.Now;
             productCoffee.Status = updateProductCoffee.Status;
             productCoffee.Deleted = updateProductCoffee.Deleted;

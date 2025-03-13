@@ -4,12 +4,14 @@ using QuanLyCafe.Models;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authorization;
 
 namespace QuanLyCafe.Controllers
 {
     [ApiController]
     [Route("api/account")]
     [EnableCors("AllowAngularClient")]
+    [Authorize]
     public class AccountController : ControllerBase
     {
         private readonly AppDbContext _context;

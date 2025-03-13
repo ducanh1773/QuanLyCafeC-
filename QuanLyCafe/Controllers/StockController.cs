@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace QuanLyCafe.Controllers
 {
     [ApiController]
     [Route("api/stock")]
     [EnableCors("AllowAngularClient")]
+    [Authorize]
     public class StockController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -21,6 +23,7 @@ namespace QuanLyCafe.Controllers
 
         // Lấy danh sách stock
         [HttpGet]
+        [Authorize]
         public ActionResult<List<Stock>> Get()
         {
             return _context.Stocks.Where(s => !s.Deleted).ToList();
@@ -28,6 +31,7 @@ namespace QuanLyCafe.Controllers
 
         // Lấy stock theo ID
         [HttpGet("{id}")]
+        [Authorize]
         public ActionResult<Stock> GetById(int id)
         {
             var stock = _context.Stocks.FirstOrDefault(s => s.Id == id && !s.Deleted);
@@ -40,6 +44,7 @@ namespace QuanLyCafe.Controllers
 
         // Thêm mới stock
         [HttpPost]
+        [Authorize]
         public ActionResult<Stock> AddStock([FromBody] UpdateStockDTO stockDto)
         {
             if (stockDto == null)
@@ -64,6 +69,7 @@ namespace QuanLyCafe.Controllers
 
         // Cập nhật stock
         [HttpPut("{id}")]
+        [Authorize]
         public ActionResult UpdateStock(int id, [FromBody] UpdateStockDTO updateDto)
         {
             var stock = _context.Stocks.FirstOrDefault(s => s.Id == id && !s.Deleted);

@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 namespace QuanLyCafe.Controllers
 {
     [ApiController]
     [Route("api/order")]
     [EnableCors("AllowAngularClient")]
-
+    [Authorize]
     public class OrderContrller : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -25,7 +26,16 @@ namespace QuanLyCafe.Controllers
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // 1️⃣ Tạo đơn hàng (OrderCoffe)
+                // 1️⃣ Kiểm tra Fund trước khi tiếp tục
+                var paymentMethod = request.paymentForms.FirstOrDefault()?.PaymentMethod ?? "Unknown";
+                var fund = await _context.funds.FirstOrDefaultAsync(f => f.FundName == paymentMethod);
+                if (fund == null)
+                {
+                    await transaction.RollbackAsync();
+                    return BadRequest(new { message = $"Phương thức thanh toán '{paymentMethod}' không hợp lệ!" });
+                }
+
+                // 2️⃣ Tạo đơn hàng (OrderCoffe)
                 var order = new OrderCoffe
                 {
                     Id_Account = request.Id_Account,
@@ -38,7 +48,7 @@ namespace QuanLyCafe.Controllers
 
                 decimal totalPrice = 0; // Tổng tiền đơn hàng
 
-                // 2️⃣ Kiểm tra kho trước khi trừ
+                // 3️⃣ Kiểm tra kho trước khi trừ
                 foreach (var item in request.orderProductDtos)
                 {
                     foreach (var stock in item.stockProductDtos)
@@ -74,7 +84,7 @@ namespace QuanLyCafe.Controllers
                     }
                 }
 
-                // 3️⃣ Nếu kho đủ hàng, trừ kho và thêm vào đơn hàng
+                // 4️⃣ Nếu kho đủ hàng, trừ kho và thêm vào đơn hàng
                 foreach (var item in request.orderProductDtos)
                 {
                     var product = await _context.ProductCoffee.FindAsync(item.ProductCoffeeId);
@@ -104,7 +114,7 @@ namespace QuanLyCafe.Controllers
                         }
                     }
 
-                    // 4️⃣ Thêm vào OrderDetailProduct
+                    // 5️⃣ Thêm vào OrderDetailProduct
                     var orderDetail = new OrderDetailProduct
                     {
                         Id_Order = order.Id,
@@ -115,22 +125,26 @@ namespace QuanLyCafe.Controllers
                     _context.orderDetailProducts.Add(orderDetail);
                 }
 
-                // 5️⃣ Tạo PaymentForm với tổng tiền tự động tính toán
+                // 6️⃣ Cập nhật Fund.SumPrice thay vì chỉ cập nhật PaymentForm
+                fund.SumPrice += totalPrice;
+                _context.funds.Update(fund);
+
+                // 7️⃣ Tạo PaymentForm với tổng tiền đơn hàng
                 var paymentForm = new PaymentForm
                 {
                     Id_Order = order.Id,
                     Sum_Price = totalPrice, // Tổng tiền đơn hàng đã tính
-                    Payment_Method = request.paymentForms.FirstOrDefault()?.PaymentMethod ?? "Unknown"
+                    Payment_Method = paymentMethod
                 };
                 _context.paymentForms.Add(paymentForm);
 
-                // 6️⃣ Cập nhật trạng thái đơn hàng thành hoàn thành
+                // 8️⃣ Cập nhật trạng thái đơn hàng thành hoàn thành
                 order.Status = true;
                 await _context.SaveChangesAsync();
 
-                // 7️⃣ Xác nhận transaction
+                // 9️⃣ Xác nhận transaction
                 await transaction.CommitAsync();
-                return Ok(new { message = "Đặt hàng thành công!", totalPrice });
+                return Ok(new { message = "Đặt hàng thành công!", totalPrice, fundSumPrice = fund.SumPrice });
             }
             catch (Exception ex)
             {

@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 namespace QuanLyCafe.Controllers
 {
     [ApiController]
     [Route("api/supply")]
     [EnableCors("AllowAngularClient")]
-
+    [Authorize]
     public class SupplyController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -20,7 +21,6 @@ namespace QuanLyCafe.Controllers
         }
 
         [HttpGet]
-
         public ActionResult<List<Supply>> Get()
         {
             var Supply = _context.Supplies.ToList();
@@ -170,7 +170,7 @@ namespace QuanLyCafe.Controllers
                     paymentForm.Payment_Method = stockRequest.PaymentMethod;
                 }
             }
-    
+
             _context.SaveChanges();
             return Ok(id);
         }

@@ -16,7 +16,7 @@ namespace QuanLyCafe.Models
 
         public decimal price { get; set; }
 
-        public string Category_Name { get; set; }
+        public string category_Name { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

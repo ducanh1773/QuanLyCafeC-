@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using QuanLyCafe.Models;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Cấu hình chuỗi kết nối
@@ -18,6 +20,8 @@ builder.Services.AddCors(options =>
                    .AllowAnyHeader();
         });
 });
+
+
 var allowedOrigins = builder.Configuration.GetSection("CorsSettings:AllowedOrigins").Get<string[]>();
 builder.Services.AddCors(options =>
 {
@@ -30,6 +34,7 @@ builder.Services.AddCors(options =>
 });
 
 
+
 // Thêm dịch vụ cho controllers
 builder.Services.AddControllers();
 
@@ -37,14 +42,36 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build(); // Chỉ định nghĩa app một lần
 
+
+var key = Encoding.UTF8.GetBytes("YourSuperLongSecretKeyWithAtLeast32Bytes!!!");
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+            ValidAudience = builder.Configuration["JwtSettings:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+    });
+
+
+var app = builder.Build(); // Chỉ định nghĩa app một lần
+app.UseAuthentication();
+app.UseAuthorization();
 // Cấu hình pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
+
 }
 
 app.UseHttpsRedirection();

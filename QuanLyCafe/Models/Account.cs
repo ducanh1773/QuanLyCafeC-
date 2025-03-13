@@ -35,6 +35,8 @@ namespace QuanLyCafe.Models
         [Required]
         public bool Deleted { get; set; }
         
+       
+        
         
         [JsonIgnore]
         public virtual ICollection<Supply> Supplies { get; set; }
